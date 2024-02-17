@@ -3,24 +3,28 @@ import './index.css'
 
 class Stopwatch extends Component {
   state = {
+    isTimerRunning: false,
     timeElapsedInSeconds: 0,
   }
 
   componentWillUnmount() {
     clearInterval(this.stopwatchId)
+    this.setState({isTimerRunning: false})
   }
 
   onStart = () => {
     this.stopwatchId = setInterval(this.tick, 1000)
+    this.setState({isTimerRunning: true})
   }
 
   onStop = () => {
     clearInterval(this.stopwatchId)
+    this.setState({isTimerRunning: false})
   }
 
   onReset = () => {
     clearInterval(this.stopwatchId)
-    this.setState({timeElapsedInSeconds: 0})
+    this.setState({isTimerRunning: false, timeElapsedInSeconds: 0})
   }
 
   tick = () => {
@@ -42,6 +46,8 @@ class Stopwatch extends Component {
   }
 
   render() {
+    const {isTimerRunning} = this.state
+
     return (
       <div className="bg-container">
         <h1 className="heading">Stopwatch</h1>
@@ -59,6 +65,7 @@ class Stopwatch extends Component {
             <button
               type="button"
               className="button start-button"
+              disabled={isTimerRunning}
               onClick={this.onStart}
             >
               Start
